@@ -30,6 +30,8 @@ jobs:
             echo "status=true" >> $GITHUB_OUTPUT
           else
             echo "status=false" >> $GITHUB_OUTPUT
+            text="Expecting database.useAuthProxy=true"
+            echo "::warning file=./helm/values-prod.yaml::$text"
           fi
 
       - name: Check Autoscaler Configuration
@@ -95,7 +97,7 @@ jobs:
           fi
 
       - name: Check Overall Status
-        if: steps.readiness_checks.outputs.OVERALL_STATUS == 'FAILED'
+        if: steps.overall_status.outputs.status == 'FAILED'
         run: |
           echo "One or more critical checks failed. Please review and address the issues."
           exit 1
